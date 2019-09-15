@@ -1,5 +1,4 @@
 var fs = require ('fs');
-
 var read = function () {
     return new Promise(function(resolve, reject) {
         fs.readFile('./sample.txt', 'utf8', function(err, result){
@@ -58,18 +57,28 @@ async function testC() {
     await read();
     
 }
-// testC(); //읽기
-// testD();//쓰기
-testB();
-template.writefile();
-template.readfile();
 
 module.exports = {
+      a1 : async function testD() {
 
-writefile : 
+        var buf = 'hello';
+        await write(buf); 
+        
+        
+    }
+    , a2 : async function testB() {
 
+    
+        var id = 'CSS';
+        await readdir(id);
+        
+    }
+    , a3 : async function testC() {
+
+    
+    
+        await read();
+        
+    }
 }
-
-
-var templte = require ('/template.js');
 
