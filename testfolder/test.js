@@ -25,6 +25,18 @@ var write = function (buf){
     });
 };
 
+var readdir = function (id) {
+    return new Promise(function (resolve, reject) {
+        fs.readFile (`../data/${id}`,'utf8',function(err, description) {
+                if (err) reject(err);
+                else {
+                    console.log(description);
+                    resolve();
+                }
+        })
+    })
+}
+
 async function testD() {
 
     var buf = 'hello';
@@ -32,7 +44,13 @@ async function testD() {
     
     
 }
+async function testB() {
 
+    
+    var id = 'CSS';
+    await readdir(id);
+    
+}
 async function testC() {
 
     
@@ -40,9 +58,9 @@ async function testC() {
     await read();
     
 }
-testC(); //읽기
-testD();//쓰기
-
+// testC(); //읽기
+// testD();//쓰기
+testB();
 template.writefile();
 template.readfile();
 
