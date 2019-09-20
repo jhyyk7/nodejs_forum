@@ -35,10 +35,10 @@ var template_LIST = function (filelist) {
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
-    var path_name = url.parse(_url, true).path_name;
+    var path_name = url.parse(_url, true).pathname;
     var title = queryData.id ;
         if(path_name == '/'){
-          var menu = `<a href="/update">update</a><a href="/delete">delete</a> `;
+          var menu = `<a href="/update?id=${title}">update</a><a href="/delete">delete</a> `;
             if(_url == '/')
             {
                 var title = 'welcome';
@@ -112,25 +112,49 @@ var app = http.createServer(function(request,response){
                 var template = template_HTML(title, list, `
                   <form action="/update_process" method="post">
                     <p><input type="hidden" name="id" value ="${title}"></p>
-                    <p><input type="text" name="title" placeholder="title"></p>
+                    <p><input type="text" name="title" placeholder="title" value= ${title}></p>
                     <p>
-                      <textarea name="description" placeholder="description"></textarea>
+                      <textarea name="description" placeholder="description">${description}</textarea>
                     </p>
                     <p>
                       <input type="submit">
                     </p>
                   </form>
-                `, '');
-                console.log(path_name);
-                console.log(title);
+                `,'' );
+                
                 response.writeHead(200);
                 response.end(template);
               });
             });
 
         }
+        else if (path_name =='/update_process') {
+          var body = '';
+          request.on('data', function(data){
+                  body = body + data;                      
+              });
+          request.on('end', function(){
+                  var post = qs.parse(body);
+                  var title = post.title;
+                  var description = post.description;
+                  var id = post.id;
+                  console.log(id);
+                  console.log(title);
+                  console.log(description);
+             fs.rename(`./data/${id}`,`./data/${title}`,function(){
+              fs.writeFile(`./data/${title}`,`${description}`,'utf8', function(){
 
-        else if (_url =='/favicon.ico') {
+                response.writeHead(302, {Location: `/?id=${title}`});
+                response.end('success');
+                });     
+              
+              });
+
+          });
+                 
+              
+        }
+        else   {
             
                 response.writeHead(404);
                 response.end('Not found');
